@@ -30,6 +30,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
+            <Button
+                android:id="@+id/buttonAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Toevoegen" 
+                android:onClick="buttonHandler"/>
+
+            <Button
+                android:id="@+id/buttonDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Verwijderen"
+                android:onClick="buttonHandler" />
+
         </LinearLayout>
 
         <ScrollView
@@ -42,19 +56,8 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical" >
 
-                <SearchView
-                    android:id="@+id/searchView1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
-
-                    <ListView
-                        android:id="@+id/listView1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" >
+                <ListView android:id="@+id/songListView" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1">
                     </ListView>
-
-                </SearchView>
 
             </LinearLayout>
         </ScrollView>
