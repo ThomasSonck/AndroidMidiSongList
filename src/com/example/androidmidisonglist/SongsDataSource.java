@@ -75,7 +75,7 @@ public class SongsDataSource {
 	private Song cursorToSong(Cursor cursor) {
 		Song song = new Song();
 
-		song.setId(cursor.getLong(0));
+		song.setId(cursor.getInt(0));
 		song.setSortOrder(cursor.getInt(1));
 		song.setName(cursor.getString(2));
 		song.setPreset(cursor.getString(3));

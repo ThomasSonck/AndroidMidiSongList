@@ -1,15 +1,15 @@
 package com.example.androidmidisonglist;
 
 public class Song {
-	private long id;
+	private int id;
 	private int sortOrder;
 	private String name, preset;
 	
-	public long getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(long id) {
-		this.id = id;
+	public void setId(int l) {
+		this.id = l;
 	}
 	public int getSortOrder() {
 		return sortOrder;
@@ -33,7 +33,7 @@ public class Song {
 	// Will be used by the ArrayAdapter in the ListView
 	@Override
 	public String toString() {
-		return name + "  \t \t " + preset;
+		return id + "\t" + name + "\t" + preset;
 	}
 	
 }

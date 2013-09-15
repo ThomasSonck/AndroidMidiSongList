@@ -36,7 +36,7 @@
           </intent-filter>
          </activity>
          
-        <activity android:name="com.example.androidmidisonglist.EditSong"
+        <activity android:name="com.example.androidmidisonglist.EditSongActivity"
                    android:label="@string/app_name">
            <intent-filter>
            <action android:name="android.intent.action.VIEW" />

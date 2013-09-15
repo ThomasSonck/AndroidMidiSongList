@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -75,11 +76,11 @@ public class SongListActivity extends Activity {
 		// geven)
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> adapter, View view,
+			public void onItemClick(AdapterView<?> adapter, final View view,
 					int position, long arg) {
 
 				List<Song> songs = datasource.getAllSongs();
-				Song song = songs.get(position);
+				final Song song = songs.get(position);
 
 				AlertDialog.Builder builder = new AlertDialog.Builder(view
 						.getContext());
@@ -114,6 +115,12 @@ public class SongListActivity extends Activity {
 										case 0: // spelen
 											break;
 										case 1: // bewerken
+											
+											Intent intent = new Intent(view.getContext(), EditSongActivity.class);
+											Message m = new Message(song.getId());
+											intent.putExtra("message", m);
+										    startActivity(intent);
+											
 											break;
 										case 2: // verwijderen
 											break;
