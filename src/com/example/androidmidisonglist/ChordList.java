@@ -1,11 +1,11 @@
 package com.example.androidmidisonglist;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class ChordList {
 
-	private Map<String, String> list = new HashMap<String, String>();
+	private Map<String, String> list = new TreeMap<String, String>();
 
 	public Map<String, String> getList() {
 		return list;

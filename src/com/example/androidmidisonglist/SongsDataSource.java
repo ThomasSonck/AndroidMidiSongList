@@ -14,9 +14,9 @@ public class SongsDataSource {
 	// Database fields
 	private SQLiteDatabase database;
 	private MySQLiteHelper dbHelper;
-	private String[] allColumns = { MySQLiteHelper.COLUMN_ID,
-			MySQLiteHelper.COLUMN_SORTORDER, MySQLiteHelper.COLUMN_NAME,
-			MySQLiteHelper.COLUMN_PRESET, };
+	private String[] allColumns = { MySQLiteHelper.COLUMN_SONGS_ID,
+			MySQLiteHelper.COLUMN_SONGS_SORTORDER, MySQLiteHelper.COLUMN_SONGS_NAME,
+			MySQLiteHelper.COLUMN_SONGS_PRESET, };
 
 	public SongsDataSource(Context context) {
 		dbHelper = new MySQLiteHelper(context);
@@ -33,14 +33,14 @@ public class SongsDataSource {
 	public Song createSong(String name, String preset) {
 		ContentValues values = new ContentValues();
 
-		values.put(MySQLiteHelper.COLUMN_SORTORDER, 0);
-		values.put(MySQLiteHelper.COLUMN_NAME, name);
-		values.put(MySQLiteHelper.COLUMN_PRESET, preset);
+		values.put(MySQLiteHelper.COLUMN_SONGS_SORTORDER, 0);
+		values.put(MySQLiteHelper.COLUMN_SONGS_NAME, name);
+		values.put(MySQLiteHelper.COLUMN_SONGS_PRESET, preset);
 
 		long insertId = database.insert(MySQLiteHelper.TABLE_SONGS, null,
 				values);
 		Cursor cursor = database.query(MySQLiteHelper.TABLE_SONGS, allColumns,
-				MySQLiteHelper.COLUMN_ID + " = " + insertId, null, null, null,
+				MySQLiteHelper.COLUMN_SONGS_ID + " = " + insertId, null, null, null,
 				null);
 		cursor.moveToFirst();
 		Song newSong = cursorToSong(cursor);
@@ -51,7 +51,7 @@ public class SongsDataSource {
 	public void deleteSong(Song song) {
 		long id = song.getId();
 		System.out.println("Song deleted with id: " + id);
-		database.delete(MySQLiteHelper.TABLE_SONGS, MySQLiteHelper.COLUMN_ID
+		database.delete(MySQLiteHelper.TABLE_SONGS, MySQLiteHelper.COLUMN_SONGS_ID
 				+ " = " + id, null);
 	}
 

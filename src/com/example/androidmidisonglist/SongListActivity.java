@@ -45,33 +45,8 @@ public class SongListActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.song_list);
 
-		datasource = new SongsDataSource(this);
-		datasource.open();
-
-		List<Song> songs = datasource.getAllSongs();
-
-		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(
-				songs.size());
-
-		for (Song s : songs) {
-
-			HashMap<String, String> item = new HashMap<String, String>();
-			item.put("name", s.getName());
-			item.put("preset", s.getPreset());
-
-			list.add(item);
-		}
-
-		String[] from = new String[] { "name", "preset" };
-
-		int[] to = new int[] { android.R.id.text1, android.R.id.text2 };
-
-		int nativeLayout = android.R.layout.two_line_list_item;
-
+		loadSongsInView();
 		ListView lv = (ListView) findViewById(R.id.songListView);
-
-		lv.setAdapter(new SimpleAdapter(this, list, nativeLayout, from, to));
-
 		// kliklistener om naar juiste view te gaan (of juiste args door te
 		// geven)
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -85,7 +60,7 @@ public class SongListActivity extends Activity {
 				AlertDialog.Builder builder = new AlertDialog.Builder(view
 						.getContext());
 
-				final CharSequence[] items = { "Spelen", "Bewerken",
+				final CharSequence[] items = { "Spelen", "Toon Akkoorden", "Bewerken",
 						"Verwijder" };
 				builder.setTitle("Wadyawannado?")
 						.setCancelable(false)
@@ -114,7 +89,11 @@ public class SongListActivity extends Activity {
 										switch (getChoice()) {
 										case 0: // spelen
 											break;
-										case 1: // bewerken
+											
+										case 1: // toon chords
+											break;
+											
+										case 2: // bewerken
 											
 											Intent intent = new Intent(view.getContext(), EditSongActivity.class);
 											Message m = new Message(song.getId());
@@ -122,15 +101,38 @@ public class SongListActivity extends Activity {
 										    startActivity(intent);
 											
 											break;
-										case 2: // verwijderen
+										case 3: // verwijderen
+											
+											new AlertDialog.Builder(view.getContext())
+											.setTitle("Song verwijderen")
+											.setMessage("Wil je deze song echt verwijderen? \n --> " + song.toString())
+											.setIcon(android.R.drawable.ic_delete)
+											.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+											    public void onClick(DialogInterface dialog, int whichButton) {
+											    	datasource.deleteSong(song);
+											    	loadSongsInView();
+											    }})
+											    
+											 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+
+											    public void onClick(DialogInterface dialog, int whichButton) {
+											    	dialog.cancel();
+											    }})
+										    .show();
+											
+											
 											break;
 										default:
+											Toast.makeText(getApplicationContext()
+													 , "Fout bij keuze: " + getChoice(), Toast.LENGTH_SHORT)
+													  .show();
 											break;
 										}
 										
-										Toast.makeText(getApplicationContext()
+										/*Toast.makeText(getApplicationContext()
 												  , "Keuze: " + getChoice(), Toast.LENGTH_SHORT)
-												  .show();
+												  .show();*/
 
 									}
 								})
@@ -150,6 +152,35 @@ public class SongListActivity extends Activity {
 			}
 		});
 
+	}
+	
+	public void loadSongsInView(){
+		datasource = new SongsDataSource(this);
+		datasource.open();
+
+		List<Song> songs = datasource.getAllSongs();
+
+		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(
+				songs.size());
+
+		for (Song s : songs) {
+
+			HashMap<String, String> item = new HashMap<String, String>();
+			item.put("name", s.getName());
+			item.put("preset", s.getPreset());
+
+			list.add(item);
+		}
+
+		String[] from = new String[] { "name", "preset" };
+
+		int[] to = new int[] { android.R.id.text1, android.R.id.text2 };
+
+		int nativeLayout = android.R.layout.two_line_list_item;
+
+		ListView lv = (ListView) findViewById(R.id.songListView);
+
+		lv.setAdapter(new SimpleAdapter(this, list, nativeLayout, from, to));
 	}
 
 	public void buttonHandler(View view) {
@@ -180,11 +211,7 @@ public class SongListActivity extends Activity {
 											.getText().toString(), inputPreset
 											.getText().toString());
 
-									ListView lv = (ListView) findViewById(R.id.songListView);
-									ArrayAdapter<Song> adapter = (ArrayAdapter<Song>) lv
-											.getAdapter();
-									adapter.add(song);
-									adapter.notifyDataSetChanged();
+									loadSongsInView();
 
 								}
 							})
