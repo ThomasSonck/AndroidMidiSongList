@@ -31,6 +31,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	  + COLUMN_SONGS_NAME + " text default '-' not null, "
 	  + COLUMN_SONGS_PRESET + " text default '-' not null);";
 	
+	/*
+	 * TODO: koppeltabel :) met dank aan laurens
+	 */
+	
 	private static final String CREATE_TABLE_CHORDS = "create table "
 			  + TABLE_CHORDS + "(" 
 			  + COLUMN_CHORDS_ID + " integer primary key autoincrement, " 

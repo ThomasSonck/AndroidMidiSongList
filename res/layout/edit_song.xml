@@ -73,6 +73,14 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/buttonAddLyrics"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp"
+                android:onClick="onButtonAddLyricsClick"
+                android:text="Songtekst" />
+
+            <Button
                 android:id="@+id/buttonDone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

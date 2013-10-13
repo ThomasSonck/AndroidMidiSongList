@@ -45,7 +45,11 @@ public class SongListActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.song_list);
 
+		datasource = new SongsDataSource(this);
+		datasource.open();
+		
 		loadSongsInView();
+		
 		ListView lv = (ListView) findViewById(R.id.songListView);
 		// kliklistener om naar juiste view te gaan (of juiste args door te
 		// geven)
@@ -155,8 +159,6 @@ public class SongListActivity extends Activity {
 	}
 	
 	public void loadSongsInView(){
-		datasource = new SongsDataSource(this);
-		datasource.open();
 
 		List<Song> songs = datasource.getAllSongs();
 
@@ -181,6 +183,7 @@ public class SongListActivity extends Activity {
 		ListView lv = (ListView) findViewById(R.id.songListView);
 
 		lv.setAdapter(new SimpleAdapter(this, list, nativeLayout, from, to));
+		
 	}
 
 	public void buttonHandler(View view) {

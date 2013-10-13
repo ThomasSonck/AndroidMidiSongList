@@ -1,6 +1,7 @@
 package com.example.androidmidisonglist;
 
 public class Chord {
+
 	private int id;
 	private int song_id;
 	private int sortOrder;
@@ -33,10 +34,21 @@ public class Chord {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public Chord(int song_id, int sortOrder, String name) {
+		super();
+		this.song_id = song_id;
+		this.sortOrder = sortOrder;
+		this.name = name;
+	}
+	
+	public Chord() {
+
+	}
 
 	@Override
 	public String toString() {
-		return id + "\t" + song_id + "\t" + name;
+		return "id=" + id + "\t" + "song_id=" + song_id + "\t" + "sortOrder=" + sortOrder + "\t" + "name=" + name;
 	}
 	
 	

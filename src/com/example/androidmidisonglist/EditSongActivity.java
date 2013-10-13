@@ -1,5 +1,7 @@
 package com.example.androidmidisonglist;
 
+import java.util.List;
+
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -24,6 +26,8 @@ public class EditSongActivity extends Activity{
 	
 	private float fontSize = 100;
 	private int margins = 10;
+	private int songId = 0;
+	private ChordsDataSource datasource;
 	
 
 	@Override
@@ -32,10 +36,17 @@ public class EditSongActivity extends Activity{
         
         setContentView(R.layout.edit_song);
         
+        datasource = new ChordsDataSource(this);
+        datasource.open();
+        
+        
+        
         Bundle b = getIntent().getExtras();
         Message m = b.getParcelable("message");
         
-        int songId = m.getSongId();
+        songId = m.getSongId();
+        loadChords();
+        
         
         // maak de knopjesgrid
         TableLayout table = (TableLayout) findViewById(R.id.tableChordButtons);
@@ -67,6 +78,10 @@ public class EditSongActivity extends Activity{
 	
 	public void addChord(View v){
 		Button b = (Button) v;
+		addTextToTable(b.getText().toString());
+	}
+	
+	public void addTextToTable(String s){
 		
 		TableLayout table = (TableLayout) findViewById(R.id.tableChords);
 		
@@ -83,7 +98,7 @@ public class EditSongActivity extends Activity{
 		}
 		
 		TextView t = new TextView(this);
-		t.setText(b.getText());
+		t.setText(s);
 		t.setTextSize(fontSize);
 		
 		
@@ -97,34 +112,12 @@ public class EditSongActivity extends Activity{
 		// scoll naar beneden
 		scrollDown();
 		
-		
-		/*table.setColumnStretchable(row.getChildCount()-1, true);*/
-		/*System.out.println("table.getChildCount() = " + table.getChildCount());
-		System.out.println("row.getChildCount() = " + row.getChildCount());
-		*/
-		//tableChordColCounter ++;
-		
-		/*Toast.makeText(getApplicationContext()
-				 , "" + table.getChildAt(tableChordRowCounter), Toast.LENGTH_SHORT)
-				  .show();*/
-		
-		
-		
-		/*for(int i = 0; i < table.getChildCount(); i++){
-
-		    TableRow row = (TableRow) table.getChildAt(i);
-		    
-		}*/
-		
-		
 	}
 
 	public void addRow(){
 		TableLayout table = (TableLayout) findViewById(R.id.tableChords);
 		TableRow row = new TableRow(this);       
         table.addView(row,new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-        //tableChordRowCounter ++;
-        //tableChordColCounter = 0;
 	}
 	
 	public void onButtonCancelClick(final View v){
@@ -154,7 +147,35 @@ public class EditSongActivity extends Activity{
 	public void onButtonDoneClick(View v){
 		if(v.getId() == R.id.buttonDone){
 			
+			datasource.deleteChordsBySongId(songId);
 			
+			TableLayout table = (TableLayout) findViewById(R.id.tableChords);
+			TableRow row = null;
+
+			int sortOrderCounter = 1;
+			
+			for(int i = 0; i < table.getChildCount(); i++){
+				
+				if(table.getChildAt(table.getChildCount()-1) != null)
+				{
+					row = (TableRow) table.getChildAt(i);
+					row.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, 0, fontSize));
+				}
+				else
+				{
+					return;
+				}
+				
+				for(int j = 0; j < row.getChildCount(); j++){
+				    TextView t = (TextView) row.getChildAt(j);
+				    datasource.createChord(sortOrderCounter, songId, t.getText().toString());
+				    sortOrderCounter ++;
+				}
+				
+				datasource.createChord(sortOrderCounter, songId, "n"); // nieuwe rij
+				sortOrderCounter ++;
+
+			}
 			
 			
 			
@@ -172,6 +193,18 @@ public class EditSongActivity extends Activity{
 			addRow();
 		}
 	}
+	
+	
+	public void onButtonAddLyricsClick(View v){
+		if(v.getId() == R.id.buttonAddLyrics){
+			
+			
+			
+			
+		}
+	}
+	
+	
 	
 	public void onButtonUndoClick(View v){
 		if(v.getId() == R.id.buttonUndo){
@@ -308,6 +341,26 @@ public class EditSongActivity extends Activity{
 			
 			scrollDown();
 		}
+	}
+	
+	public void loadChords(){
+		List<Chord> chords = datasource.getChordsForSong(songId);
+		
+		if(chords.size() > 0)
+		{
+			for(Chord c : chords)
+			{
+				if(c.getName().equals("n"))
+				{
+					addRow();
+				}
+				else
+				{
+					addTextToTable(c.getName());
+				}
+			}
+		}
+
 	}
 
     @Override

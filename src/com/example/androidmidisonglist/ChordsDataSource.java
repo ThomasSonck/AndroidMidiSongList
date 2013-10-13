@@ -46,6 +46,9 @@ public class ChordsDataSource {
 		cursor.moveToFirst();
 		Chord newChord = cursorToChord(cursor);
 		cursor.close();
+		
+		System.out.println("Chord gemaakt: " + newChord.toString());
+		
 		return newChord;
 	}
 
@@ -55,6 +58,38 @@ public class ChordsDataSource {
 		database.delete(MySQLiteHelper.TABLE_CHORDS, MySQLiteHelper.COLUMN_CHORDS_ID
 				+ " = " + id, null);
 	}
+	
+	
+	public void deleteChordsBySongId(Integer songId) {
+		
+		List<Chord> chords = new ArrayList<Chord>();
+
+		Cursor cursor = database.query(
+				MySQLiteHelper.TABLE_CHORDS, 
+				allColumns,
+				"song_id = " + songId, 
+				null, null, null, null);
+
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			Chord chord = cursorToChord(cursor);
+			chords.add(chord);
+			cursor.moveToNext();
+		}
+		// Make sure to close the cursor
+		cursor.close();
+		
+		for(Chord c : chords)
+		{
+			long id = c.getId();
+			System.out.println("Chord deleted with id: " + id);
+			database.delete(MySQLiteHelper.TABLE_CHORDS, MySQLiteHelper.COLUMN_CHORDS_ID
+					+ " = " + id, null);
+		}
+		
+
+	}
+	
 
 	public List<Chord> getAllChords() {
 		List<Chord> chords = new ArrayList<Chord>();
@@ -73,16 +108,20 @@ public class ChordsDataSource {
 		return chords;
 	}
 	
-	public List<Chord> getChordsForSong(int song_id) {
+	public List<Chord> getChordsForSong(Integer songId) {
 		List<Chord> chords = new ArrayList<Chord>();
 
+		Cursor cursor = database.query(
+				MySQLiteHelper.TABLE_CHORDS, 
+				allColumns,
+				"song_id = " + songId, 
+				null, null, null, null);
 		/*
-		 * TODO: query schrijven die enkel chords voor deze song ophaalt HIERONDER
-		 */
-		
-		Cursor cursor = database.query(MySQLiteHelper.TABLE_CHORDS, allColumns,
-				null, null, null, null, null);
-
+		System.out.println("id: " + cursor.getColumnIndex("_id"));
+		System.out.println("songid: " + cursor.getColumnIndex("song_id"));
+		System.out.println("sortorder: " + cursor.getColumnIndex("sortOrder"));
+		System.out.println("name: " + cursor.getColumnIndex("name"));
+		*/
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			Chord chord = cursorToChord(cursor);
@@ -91,6 +130,9 @@ public class ChordsDataSource {
 		}
 		// Make sure to close the cursor
 		cursor.close();
+		
+		System.out.println("GetChordsForSong: " + chords);
+		
 		return chords;
 	}
 
@@ -99,8 +141,8 @@ public class ChordsDataSource {
 
 		chord.setId(cursor.getInt(0));
 		chord.setSong_id(cursor.getInt(1));
-		chord.setSortOrder(cursor.getInt(2));
-		chord.setName(cursor.getString(3));
+		chord.setSortOrder(cursor.getInt(3));
+		chord.setName(cursor.getString(2));
 		
 		return chord;
 	}
